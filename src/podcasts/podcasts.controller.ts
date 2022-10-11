@@ -5,39 +5,18 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
 } from '@nestjs/common';
 import { Episode } from '../episodes/entities/episode.entity';
 import { Podcast } from './entities/podcast.entity';
 import { PodCastsService } from './podcasts.service';
-
-export type createPodcastDto = {
-  title: string;
-  category: string;
-  rating: number;
-  episodes: Episode[];
-};
-
-export type patchPodcastDto = {
-  title?: string;
-  category?: string;
-  rating?: number;
-  episodes?: Episode[];
-};
-
-export type createEpisodeDto = {
-  content: string;
-};
-
-export type patchEpisodeDto = {
-  content?: string;
-};
-
-export type CustomResponse = {
-  isOK: boolean;
-  data?: any;
-  error?: string;
-};
+import {
+  CreateEpisodeDto,
+  CreatePodcastDto,
+  CustomResponse,
+  PatchEpisodeDto,
+  PatchPodcastDto,
+} from './podcasts.dtos';
 
 @Controller('podcasts')
 export class PodcastsController {
@@ -56,60 +35,60 @@ export class PodcastsController {
   */
 
   @Get()
-  getAllPodcasts(): Podcast[] {
+  getAllPodcasts(): CustomResponse {
     return this.podcastsService.getAllPodcast();
   }
 
   @Post()
-  createPodcast(@Body() createData: createPodcastDto): Podcast {
+  createPodcast(@Body() createData: CreatePodcastDto): CustomResponse {
     return this.podcastsService.createPodcast(createData);
   }
 
-  @Get('/:id')
-  getPodcast(@Param('id') id: number): Podcast | CustomResponse {
+  @Get(':id')
+  getPodcast(@Param('id') id: number): CustomResponse {
     return this.podcastsService.getPodcast(id);
   }
 
-  @Patch('/:id')
+  @Patch(':id')
   patchPodcast(
     @Param('id') id: number,
-    @Body() patchData: patchPodcastDto,
-  ): Podcast | CustomResponse {
+    @Body() patchData: PatchPodcastDto,
+  ): CustomResponse {
     return this.podcastsService.patchPodcast(id, patchData);
   }
 
-  @Delete('/:id')
-  deletePodcast(@Param('id') id: number): void {
-    this.podcastsService.deletePodcast(id);
+  @Delete(':id')
+  deletePodcast(@Param('id') id: number): CustomResponse {
+    return this.podcastsService.deletePodcast(id);
   }
 
-  @Get('/:id/episodes')
-  getAllEpisodes(@Param('id') id: number): Episode[] | CustomResponse {
+  @Get(':id/episodes')
+  getAllEpisodes(@Param('id') id: number): CustomResponse {
     return this.podcastsService.getAllEpisodes(id);
   }
 
-  @Post('/:id/episodes')
+  @Post(':id/episodes')
   createEpisode(
     @Param('id') id: number,
-    @Body() createData: createEpisodeDto,
-  ): Episode | CustomResponse {
+    @Body() createData: CreateEpisodeDto,
+  ): CustomResponse {
     return this.podcastsService.createEpisode(id, createData);
   }
 
-  @Patch('/:id/episodes/:episodeId')
+  @Patch(':id/episodes/:episodeId')
   patchEpisode(
     @Param('id') id: number,
     @Param('episodeId') episodeId: number,
-    @Body() patchData: patchEpisodeDto,
-  ): Episode | CustomResponse {
+    @Body() patchData: PatchEpisodeDto,
+  ): CustomResponse {
     return this.podcastsService.patchEpisode(id, episodeId, patchData);
   }
 
-  @Delete('/:id/episodes/:episodeId')
+  @Delete(':id/episodes/:episodeId')
   deleteEpisode(
     @Param('id') id: number,
     @Param('episodeId') episodeId: number,
-  ): void | CustomResponse {
+  ): CustomResponse {
     return this.podcastsService.deleteEpisode(id, episodeId);
   }
 }
