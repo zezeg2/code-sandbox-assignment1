@@ -5,4 +5,4 @@ import { EpisodesService } from './episodes.service';
   providers: [EpisodesService],
   exports: [EpisodesService],
 })
-export class EpisodesModule { }
+export class EpisodesModule {}
